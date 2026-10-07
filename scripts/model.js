@@ -174,14 +174,3 @@ export function sortScores(scores) {
   }
   return scores2;
 }
-
-// asynchronous code
-
-console.log('1');
-setTimeout(()=>console.log('2'),100);
-ContentVisibilityAutoStateChangeEvent.log('3');
-fetch("books.json")
-  .then((response)=>response.json())
-  .then((books)=>console.log(books.length))
-  .catch((error)=>console.error(error));
-

@@ -55,6 +55,7 @@ export function sameBlock(r1, c1, r2, c2) {
 /** Read the value at (row, col): a digit 1-9, or EMPTY (-1). */
 export function getCell(board, row, col) {
   // TODO: return the value stored at board[row][col]
+  return(board[row][col]);
 }
 
 /**
@@ -65,6 +66,17 @@ export function getCell(board, row, col) {
  */
 export function setCell(board, row, col, value) {
   // TODO: return a new 9x9 board with exactly one cell changed
+  let newBoard = board.map((r,i)=>
+    r.map((x,j)=>{
+      if(i==row && j==col){
+        return value;
+      }
+      else{
+        return x;
+      }
+    })
+  );
+  return newBoard;
 }
 
 /**
@@ -77,11 +89,49 @@ export function setCell(board, row, col, value) {
  */
 export function findConflicts(board, row, col) {
   // TODO: return an array of [row, col] pairs that conflict with (row, col)
+  // prob not complete
+  let value = 0;
+  let conflicts = [];
+  value=board[row][col];
+  
+        if(value===EMPTY){
+          return conflicts;
+        }
+  for(let i=0;i<board.length;i++){
+    for(let j=0;j<board[0].length;j++){
+        if(i==row && j==col){
+        }
+        else{
+        if(value==board[i][j]){
+          if(sameRow(row, col, i, j)|| sameColumn(row,col,i,j) || sameBlock(row,col,i,j)){
+            conflicts.push([i, j]);
+          }
+        }
+       
+      }
+    }
+  }
+  return conflicts;
 }
 
 /** True when every cell is filled (no EMPTY) and nothing conflicts. */
 export function isComplete(board) {
   // TODO: false if any cell is EMPTY or has conflicts; otherwise true
+  let matrix=[];
+  for(let i = 0;i<board.length; i++){
+    for(let j=0;j<board[i].length;j++){
+      if(board[i][j]===EMPTY){
+        return false;
+      }
+      else{
+        matrix=findConflicts(board,i,j);
+        if(matrix.length>0){
+          return false;
+      }
+    }
+  }
+}
+  return true;
 }
 
 // ---------------------------------------------------------------------
@@ -93,15 +143,45 @@ export function isComplete(board) {
 export function formatDuration(durationSeconds) {
   // TODO: whole minutes, then zero-padded seconds.
   // Hint: String(n).padStart(2, '0')
+  let seconds = durationSeconds%60;
+  let minutes = Math.floor(durationSeconds/60);
+  return `${String(minutes)}:${String(seconds).padStart(2,'0')}`;
+
 }
 
 /** Format a Date as "YYYY/MM/DD" (e.g. "2021/03/02"). */
 export function formatDate(date) {
   // TODO: getFullYear(), getMonth() + 1, getDate() - month/day zero-padded
+  let year = date.getFullYear()
+  let month = date.getMonth()+1;
+  let day = date.getDate();
+  return `${String(year)}/${String(month).padStart(2,'0')}/${String(day).padStart(2,'0')}`
 }
 
 /** A NEW array of scores sorted fastest-first, without mutating the input. */
 export function sortScores(scores) {
   // TODO: copy the array, then sort by durationSeconds ascending.
   // Hint: [...scores] makes a copy so the original is left untouched.
+  let scores2=[...scores];
+  for(let i=0;i<scores.length;i++){
+    for(let j = i+1;j<scores.length;j++){
+      if(scores2[i].durationSeconds>scores2[j].durationSeconds){
+        let value=scores2[i];
+        scores2[i]=scores2[j];
+        scores2[j]=value;
+      }
+    }
+  }
+  return scores2;
 }
+
+// asynchronous code
+
+console.log('1');
+setTimeout(()=>console.log('2'),100);
+ContentVisibilityAutoStateChangeEvent.log('3');
+fetch("books.json")
+  .then((response)=>response.json())
+  .then((books)=>console.log(books.length))
+  .catch((error)=>console.error(error));
+
